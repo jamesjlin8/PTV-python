@@ -100,15 +100,17 @@ def subtract_background(images: Union[pims.ImageSequence, List[np.ndarray]], bac
     else:
         frames = images
     
+    # Convert background to float32 once (not in every iteration)
+    background_float = background.astype(np.float32)
+    
     # Subtract background from each frame
     processed_frames = []
     for frame in frames:
-        # Ensure frame and background have the same data type
-        frame = frame.astype(np.float32)
-        background = background.astype(np.float32)
+        # Ensure frame has the same data type as background
+        frame_float = frame.astype(np.float32)
         
         # Subtract background
-        processed = frame - background
+        processed = frame_float - background_float
         
         # Clip negative values to 0
         processed = np.clip(processed, 0, None)
